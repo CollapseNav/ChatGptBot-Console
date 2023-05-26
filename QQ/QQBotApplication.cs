@@ -1,4 +1,4 @@
-namespace EasyChatGptBot;
+namespace ChatGptBotConsole;
 public class QQBotApplication : BotApplication
 {
     public QQBotApplication(IMsgPipeline pipeline, ObjContainer container) : base(pipeline, container)
@@ -9,7 +9,7 @@ public class QQBotApplication : BotApplication
     {
         while (true)
         {
-            var msg = await pipeline.GetMsgAsync() as QQGroupMsg;
+            var msg = await pipeline.GetMsgAsync();
             await ExecMiddleware(msg).Invoke();
         }
     }

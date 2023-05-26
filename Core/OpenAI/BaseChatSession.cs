@@ -1,7 +1,7 @@
 using System.Net.Http.Json;
 using Collapsenav.Net.Tool;
 
-namespace EasyChatGptBot;
+namespace ChatGptBotConsole;
 public class BaseChatSession : IOpenAiChatSession
 {
     private readonly OpenAIConfig config;

@@ -1,7 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using EleCho.GoCqHttpSdk;
 
-namespace EasyChatGptBot;
+namespace ChatGptBotConsole;
 
 public static class QQExt
 {
@@ -39,6 +39,12 @@ public static class QQExt
             {
                 // 尝试创建群at消息，暂时只接受群消息
                 var msg = QQGroupMsg.CreateMsg(context, session);
+                if (msg != null)
+                    application.AddMsg(msg);
+            });
+            session.UsePrivateMessage(async context =>
+            {
+                var msg = QQPrivateMsg.CreateMsg(context, session);
                 if (msg != null)
                     application.AddMsg(msg);
             });

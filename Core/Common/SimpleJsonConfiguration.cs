@@ -1,7 +1,7 @@
 using System.Text.Json.Nodes;
 using Collapsenav.Net.Tool;
 
-namespace EasyChatGptBot;
+namespace ChatGptBotConsole;
 
 /// <summary>
 /// 简单的Json配置

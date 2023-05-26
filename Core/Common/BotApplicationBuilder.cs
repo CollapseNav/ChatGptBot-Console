@@ -1,6 +1,6 @@
 using System.Text.Json.Nodes;
 
-namespace EasyChatGptBot;
+namespace ChatGptBotConsole;
 
 public class BotApplicationBuilder
 {
@@ -42,8 +42,15 @@ public class BotApplicationBuilder
     {
         Container.AddOrUpdate(Container);
         var botapplication = Container.GetObj<BotApplication>();
-        foreach (var action in Actions)
-            action(botapplication, Container);
+        try
+        {
+            foreach (var action in Actions)
+                action(botapplication, Container);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
         return botapplication;
     }
 }

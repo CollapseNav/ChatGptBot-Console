@@ -1,5 +1,5 @@
-﻿using Collapsenav.Net.Tool;
-using EasyChatGptBot;
+﻿using ChatGptBotConsole;
+using Collapsenav.Net.Tool;
 var builder = BotApplication.CreateBuilder();
 var configPath = args.FirstOrDefault().IsEmpty("AppConfig.json");
 builder
@@ -7,13 +7,16 @@ builder
 .AddJsonConfig<OpenAIChatConfig>("ChatConfig")
 .AddJsonConfig<OpenAIConfig>("OpenAIConfig")
 .AddJsonConfig<AiContent>("Content")
-// .AddQQBot("ws://localhost:8080")
-.AddHttpBot("http://localhost:8080/")
-.AddType<ChatSessionManager<HttpSimpleUser>>()
+.AddJsonConfig<NlpConfig>("NlpConfig")
+.AddQQBot("ws://localhost:8080")
+.AddType<ChatSessionManager<QQGroupUser>>()
+.AddType<ChatSessionManager<QQSimpleUser>>()
 .AddType<BaseChatSession>()
 .Add(new HttpClient())
 ;
 var app = builder.Build();
 app.Use<DefaultErrorHandleMiddleware>();
-app.Use<BaseChatMiddleware<HttpSimpleUser>>();
+app.Use<NlpClassificationMiddleware>();
+app.Use<BaseChatMiddleware<QQSimpleUser>>();
+app.Use<BaseChatMiddleware<QQGroupUser>>();
 await app.RunAsync();

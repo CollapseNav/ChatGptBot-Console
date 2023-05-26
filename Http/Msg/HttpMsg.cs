@@ -2,7 +2,7 @@ using System.Data;
 using System.Net;
 using Collapsenav.Net.Tool;
 
-namespace EasyChatGptBot;
+namespace ChatGptBotConsole;
 
 public class HttpMsg : BotMsg<HttpSimpleUser>
 {

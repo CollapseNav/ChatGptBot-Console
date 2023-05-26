@@ -1,4 +1,4 @@
-namespace EasyChatGptBot;
+namespace ChatGptBotConsole;
 
 /// <summary>
 /// 一个简单的错误处理中间件，只是简单的输出异常
@@ -14,7 +14,7 @@ public class DefaultErrorHandleMiddleware : IMiddleware
         catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
-            botMsg.Response(ex.Message);
+            botMsg?.Response(ex.Message);
         }
     }
 }

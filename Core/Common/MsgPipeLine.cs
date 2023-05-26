@@ -1,6 +1,6 @@
 using System.Collections.Concurrent;
 
-namespace EasyChatGptBot;
+namespace ChatGptBotConsole;
 
 /// <summary>
 /// 消息管道

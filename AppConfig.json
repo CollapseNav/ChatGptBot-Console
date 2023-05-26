@@ -1,4 +1,7 @@
 {
+    "NlpConfig": {
+        "Url": "http://localhost:8000/text"
+    },
     "ChatConfig": {
         "LimitTime": 300,
         "LimitCount": 5,

@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace EasyChatGptBot;
+namespace ChatGptBotConsole;
 
 public static class HttpExt
 {

@@ -2,33 +2,24 @@ using System.Data;
 using EleCho.GoCqHttpSdk;
 using EleCho.GoCqHttpSdk.Message;
 using EleCho.GoCqHttpSdk.Post;
-namespace EasyChatGptBot;
+namespace ChatGptBotConsole;
 
 /// <summary>
 /// qq群at消息
 /// </summary>
-public class QQGroupMsg : BotMsg<QQGroupUser, QQGroupUser>
+public class QQGroupMsg : QQMsg<CqGroupMessagePostContext>, IBotMsg<QQGroupUser, QQGroupUser>
 {
     /// <summary>
     /// 群号
     /// </summary>
     public long? GroupId { get; set; }
-    private readonly CqWsSession session;
-    public QQGroupMsg(CqWsSession session)
-    {
-        this.session = session;
-    }
-    public QQGroupMsg(CqGroupMessagePostContext context, CqWsSession session)
-    {
-        this.session = session;
-        InitMsg(this, context);
-    }
-    public QQGroupMsg(CqGroupMessagePostContext context)
+    public QQGroupUser[]? To { get; protected set; }
+    public QQGroupUser? From { get; protected set; }
+    public QQGroupMsg(CqWsSession session) : base(session) { }
+    public QQGroupMsg(CqGroupMessagePostContext context, CqWsSession session) : base(context, session)
     {
         InitMsg(this, context);
     }
-
-    public QQGroupMsg() { }
 
     /// <summary>
     /// 通过context创建消息
@@ -63,6 +54,7 @@ public class QQGroupMsg : BotMsg<QQGroupUser, QQGroupUser>
     {
         var msg = context.Message;
         Msg = context.Message.Text;
+        GroupId = context.GroupId;
         From = new QQGroupUser(context.UserId, context?.Sender?.Nickname, context.GroupId); ;
         var atmsg = msg.Where(item => item is CqAtMsg).ToList();
         To = atmsg.Select(item =>

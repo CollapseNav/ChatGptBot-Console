@@ -1,4 +1,4 @@
-namespace EasyChatGptBot;
+namespace ChatGptBotConsole;
 
 public class OpenAIConfig : IStartInit
 {

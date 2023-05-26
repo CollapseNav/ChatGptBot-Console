@@ -1,4 +1,4 @@
-namespace EasyChatGptBot;
+namespace ChatGptBotConsole;
 /// <summary>
 /// bot消息
 /// </summary>

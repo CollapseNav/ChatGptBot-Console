@@ -1,6 +1,6 @@
 using Collapsenav.Net.Tool;
 
-namespace EasyChatGptBot;
+namespace ChatGptBotConsole;
 
 /// <summary>
 /// 一个简单的 对象容器

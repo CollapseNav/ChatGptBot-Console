@@ -1,4 +1,4 @@
-namespace EasyChatGptBot;
+namespace ChatGptBotConsole;
 
 public class ChatSessionManager<T> where T : IChatSessionKey
 {
@@ -34,6 +34,6 @@ public class ChatSessionManager<T> where T : IChatSessionKey
     {
         if (botMsg is IBotMsg<T> chatBotMsg)
             return GetSession(chatBotMsg.From);
-        throw new Exception("错误的对象结构");
+        return null;
     }
 }

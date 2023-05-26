@@ -1,3 +1,3 @@
-namespace EasyChatGptBot;
+namespace ChatGptBotConsole;
 
 public interface IChatSessionKey { }

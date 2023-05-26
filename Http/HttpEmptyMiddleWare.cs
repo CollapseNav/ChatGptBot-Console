@@ -1,6 +1,6 @@
 using Collapsenav.Net.Tool;
 
-namespace EasyChatGptBot;
+namespace ChatGptBotConsole;
 
 public class HttpEmptyMiddleware : IMiddleware
 {
