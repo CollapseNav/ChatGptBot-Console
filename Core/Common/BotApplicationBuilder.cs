@@ -27,6 +27,11 @@ public class BotApplicationBuilder
         return this;
     }
 
+    public BotApplicationBuilder AddType(Type type)
+    {
+        Container.AddType(type);
+        return this;
+    }
     /// <summary>
     /// 注册类型
     /// </summary>

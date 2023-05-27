@@ -1,6 +1,17 @@
 {
     "NlpConfig": {
-        "Url": "http://localhost:8000/text"
+        "Url": "http://localhost:8000",
+        "DefaultLables": [
+            "draw",
+            "chat",
+            "addwhitelist",
+            "removewhitelist",
+            "addblacklist",
+            "removeblacklist",
+            "showblacklist",
+            "unknow",
+            "other"
+        ]
     },
     "ChatConfig": {
         "LimitTime": 300,
@@ -9,7 +20,11 @@
         "DefaultContent": "猫娘"
     },
     "OpenAIConfig": {
-        "ApiKey": ""
+    },
+    "AccountConfig": {
+        "AllowList": [],
+        "BlockList": [],
+        "AdminList": []
     },
     "Content": {
         "DefaultPrompt": {

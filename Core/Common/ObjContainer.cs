@@ -92,6 +92,13 @@ public class ObjContainer
         var parameters = parameterTypes.Select(item => GetObj(item)).ToArray();
         return Activator.CreateInstance(type, parameters)!;
     }
+    public ObjContainer AddType(Type type)
+    {
+        if (Types.Contains(type))
+            return this;
+        Types.Add(type);
+        return this;
+    }
     /// <summary>
     /// 注册type
     /// </summary>

@@ -9,6 +9,7 @@ namespace ChatGptBotConsole;
 /// </summary>
 public class QQGroupMsg : QQMsg<CqGroupMessagePostContext>, IBotMsg<QQGroupUser, QQGroupUser>
 {
+    public List<CqAtMsg> AtMsgs { get; protected set; }
     /// <summary>
     /// 群号
     /// </summary>
@@ -57,10 +58,7 @@ public class QQGroupMsg : QQMsg<CqGroupMessagePostContext>, IBotMsg<QQGroupUser,
         GroupId = context.GroupId;
         From = new QQGroupUser(context.UserId, context?.Sender?.Nickname, context.GroupId); ;
         var atmsg = msg.Where(item => item is CqAtMsg).ToList();
-        To = atmsg.Select(item =>
-        {
-            var at = (item as CqAtMsg)!;
-            return new QQGroupUser(at.Target, at.Name, context.GroupId);
-        }).ToArray();
+        AtMsgs = atmsg.Select(item => (item as CqAtMsg)!).ToList();
+        To = AtMsgs.Select(item => new QQGroupUser(item.Target, item.Name, context.GroupId)).ToArray();
     }
 }

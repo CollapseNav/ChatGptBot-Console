@@ -4,9 +4,10 @@ using Collapsenav.Net.Tool;
 namespace ChatGptBotConsole;
 public class BaseChatSession : IOpenAiChatSession
 {
-    private readonly OpenAIConfig config;
-    private readonly OpenAIChatConfig chatConfig;
-    private readonly HttpClient client;
+    protected readonly OpenAIConfig config;
+    protected readonly OpenAIChatConfig chatConfig;
+    protected readonly HttpClient client;
+    protected bool KeepHistory = true;
     protected string AiContent = string.Empty;
 
     public BaseChatSession(IConfig<OpenAIConfig> config, IConfig<OpenAIChatConfig> chatConfig, IConfig<AiContent> content, HttpClient client)
@@ -66,6 +67,7 @@ public class BaseChatSession : IOpenAiChatSession
     {
         Reset();
         AiContent = text;
-        History.Enqueue(new OpenAIChatUnit(OpenAIRoleEnum.system.ToString(), AiContent));
+        if (AiContent.NotEmpty())
+            History.Enqueue(new OpenAIChatUnit(OpenAIRoleEnum.system.ToString(), AiContent));
     }
 }
