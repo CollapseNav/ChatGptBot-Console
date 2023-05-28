@@ -18,7 +18,7 @@ public class BaseChatSession : IOpenAiChatSession
         History = new Queue<OpenAIChatUnit>();
         if (this.chatConfig.DefaultContent.NotEmpty())
         {
-            var prompt = content.Data.GetPrompt(this.chatConfig.DefaultContent);
+            var prompt = content.Data.GetPrompt(this.chatConfig.DefaultContent ?? "");
             SetContent(prompt);
         }
     }
@@ -52,10 +52,10 @@ public class BaseChatSession : IOpenAiChatSession
             return "请求失败，OpenAI无响应";
         if (res.Error != null)
             return $"Api响应错误：{res.Error.Message}";
-        if (res.Choices.IsEmpty() || res.Choices.FirstOrDefault().Message == null)
+        if (res.Choices.IsEmpty() || res?.Choices?.FirstOrDefault()?.Message == null)
             return "Api响应无内容";
         // 响应成功
-        var result = res?.Choices?.FirstOrDefault()?.Message?.Content;
+        var result = res?.Choices?.FirstOrDefault()?.Message?.Content!;
         var currRes = new OpenAIChatUnit(OpenAIRoleEnum.assistant.ToString(), result);
         // 成功响应之后将本次对话加入历史记录
         History.Enqueue(curr);

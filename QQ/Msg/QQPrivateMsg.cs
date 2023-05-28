@@ -1,4 +1,6 @@
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
+using Collapsenav.Net.Tool;
 using EleCho.GoCqHttpSdk;
 using EleCho.GoCqHttpSdk.Message;
 using EleCho.GoCqHttpSdk.Post;
@@ -24,34 +26,52 @@ public class QQPrivateMsg : QQMsg<CqPrivateMessagePostContext>, IBotMsg<QQSimple
     /// <summary>
     /// 通过context创建消息
     /// </summary>
-    public static QQPrivateMsg CreateMsg(CqPrivateMessagePostContext context, CqWsSession session)
+    public static QQPrivateMsg? CreateMsg(CqPrivateMessagePostContext context, CqWsSession session)
     {
         return InitMsg(new QQPrivateMsg(session), context);
     }
     /// <summary>
     /// 通过context初始化群at消息
     /// </summary>
-    public static QQPrivateMsg InitMsg(QQPrivateMsg botMsg, CqPrivateMessagePostContext context)
+    public static QQPrivateMsg? InitMsg(QQPrivateMsg botMsg, CqPrivateMessagePostContext context)
     {
         if (botMsg == null || context == null)
             throw new NoNullAllowedException();
         botMsg.InitByMsgContext(context);
-        if (botMsg.To.Any(item => item.UserId == context.SelfId))
+        if (botMsg!.To!.Any(item => item.UserId == context.SelfId))
             return botMsg;
         return null;
     }
 
     public override void Response(string data)
     {
-        session.SendPrivateMessageAsync(From.UserId.Value, new CqMessage { new CqTextMsg(data) }).Wait();
+        session.SendPrivateMessageAsync(From!.UserId!.Value, new CqMessage { new CqTextMsg(data) }).Wait();
     }
 
-    public void InitByMsgContext(CqPrivateMessagePostContext context)
+    public void InitByMsgContext([NotNull] CqPrivateMessagePostContext context)
     {
         var msg = context.Message;
         Msg = context.Message.Text;
         From = new QQSimpleUser(context.UserId, context?.Sender?.Nickname); ;
         var atmsg = msg.Where(item => item is CqAtMsg).ToList();
-        To = new[] { new QQSimpleUser(context.SelfId, "SELF") };
+        To = new[] { new QQSimpleUser(context!.SelfId, "SELF") };
+    }
+
+    public override void Response([NotNull] MultiResponseData data)
+    {
+        var msg = new CqMessage { };
+        if (data.Msg.NotEmpty())
+            msg.Add(new CqTextMsg(data.Msg!));
+        if (data.Images.NotEmpty())
+        {
+            foreach (var image in data.Images!)
+            {
+                var guid = Guid.NewGuid().ToString();
+                var filename = $"{guid}.png";
+                image.SaveTo($"G:\\go-cqhttp_windows_amd64\\data\\images\\{filename}");
+                msg.Add(new CqImageMsg(filename));
+            }
+        }
+        session.SendPrivateMessage(From!.UserId!.Value, msg);
     }
 }

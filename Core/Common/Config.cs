@@ -6,5 +6,5 @@ public class Config<T> : IConfig<T>
     {
         Data = configuration.Get<T>(nodePath);
     }
-    public T Data { get; set; }
+    public T? Data { get; set; }
 }

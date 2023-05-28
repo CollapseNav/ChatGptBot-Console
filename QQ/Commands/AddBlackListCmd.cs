@@ -1,10 +1,7 @@
-using Collapsenav.Net.Tool;
-using EleCho.GoCqHttpSdk.Post;
-
 namespace ChatGptBotConsole;
 
-[Prefix("block", "addblocklist", "addblacklist", "addblock", "addblack")]
-public class AddBlackListCmd : AbstractCmd
+[Prefix("加黑名单", "拉入黑名单")]
+public class AddBlackListCmd : ClassificationCmd
 {
     private readonly AccountListData accountList;
 
@@ -16,8 +13,7 @@ public class AddBlackListCmd : AbstractCmd
     }
     public override async Task<bool> ExecAsync(IBotMsg botMsg)
     {
-        var qqmsg = botMsg as QQGroupMsg;
-        if (qqmsg == null)
+        if (botMsg is not QQGroupMsg qqmsg)
             return true;
         if (qqmsg.AtMsgs.Count <= 1)
             return true;
@@ -25,50 +21,3 @@ public class AddBlackListCmd : AbstractCmd
         return true;
     }
 }
-
-
-public class AccountListData
-{
-    public List<long> BlackList { get; set; } = new List<long>();
-    public List<long> AdminList { get; set; } = new List<long>();
-    public List<long> WhiteList { get; set; } = new List<long>();
-
-    public void RemoveBlackList(params long[] ids)
-    {
-        foreach (var id in ids)
-        {
-            if (BlackList.Contains(id))
-                BlackList.Remove(id);
-        }
-    }
-    public void AddToBlackList(params long[] ids)
-    {
-        foreach (var id in ids)
-        {
-            if (id.In(AdminList) || id.In(WhiteList) || BlackList.Contains(id))
-                continue;
-            BlackList.Add(id);
-        }
-    }
-    public void AddToWhiteList(params long[] ids)
-    {
-        foreach (var id in ids)
-        {
-            if (id.In(BlackList))
-                BlackList.Remove(id);
-            if (!WhiteList.Contains(id))
-                WhiteList.Add(id);
-        }
-    }
-    public void AddToAdminList(params long[] ids)
-    {
-        foreach (var id in ids)
-        {
-            if (!AdminList.Contains(id))
-                AdminList.Add(id);
-            if (!WhiteList.Contains(id))
-                WhiteList.Add(id);
-        }
-    }
-}
-

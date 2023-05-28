@@ -38,7 +38,7 @@ public class ObjContainer
     /// </summary>
     public ObjContainer AddOrUpdate<T>(T obj)
     {
-        return AddOrUpdate(typeof(T), obj);
+        return AddOrUpdate(typeof(T), obj!);
     }
 
     /// <summary>

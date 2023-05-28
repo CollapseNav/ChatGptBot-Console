@@ -2,24 +2,24 @@ using Collapsenav.Net.Tool;
 
 namespace ChatGptBotConsole;
 
-[Prefix("showblacklist", "showblocklist")]
-public class ShowBlackListCmd : AbstractCmd
+[Prefix("列出黑名单")]
+public class ShowBlackListCmd : ClassificationCmd
 {
-    private readonly AccountListData accountList;
+    private readonly IConfig<AccountListData> accountList;
 
-    public ShowBlackListCmd(AccountListData accountList)
+    public ShowBlackListCmd(IConfig<AccountListData> accountList)
     {
         this.accountList = accountList;
     }
 
     public override async Task<bool> ExecAsync(IBotMsg botMsg)
     {
-        if (accountList.BlackList.IsEmpty())
+        if (accountList.Data.BlackList.IsEmpty())
         {
             botMsg.Response("当前系统内没有黑名单");
             return true;
         }
-        botMsg.Response(accountList.BlackList.Join("\n"));
+        botMsg.Response(accountList.Data.BlackList.Join("\n"));
         return true;
     }
 }

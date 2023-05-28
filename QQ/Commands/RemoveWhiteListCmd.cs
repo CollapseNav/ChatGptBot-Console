@@ -1,10 +1,9 @@
 namespace ChatGptBotConsole;
-[Prefix("移除黑名单", "移出黑名单")]
-public class RemoveBlackListCmd : ClassificationCmd
+[Prefix("移除白名单", "移出白名单")]
+public class RemoveWhiteListCmd : ClassificationCmd
 {
     private readonly AccountListData accountList;
-
-    public RemoveBlackListCmd(AccountListData accountList)
+    public RemoveWhiteListCmd(AccountListData accountList)
     {
         this.accountList = accountList;
     }
@@ -13,7 +12,7 @@ public class RemoveBlackListCmd : ClassificationCmd
     {
         if (botMsg is not QQGroupMsg qqmsg)
             return true;
-        if (qqmsg!.AtMsgs!.Count <= 1)
+        if (qqmsg.AtMsgs.Count <= 1)
             return true;
         accountList.RemoveBlackList(qqmsg.AtMsgs.Select(item => item.Target).ToArray());
         return true;

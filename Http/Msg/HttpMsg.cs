@@ -37,4 +37,8 @@ public class HttpMsg : BotMsg<HttpSimpleUser>
         botMsg.Msg = msg;
         return botMsg;
     }
+
+    public override void Response(MultiResponseData data)
+    {
+    }
 }

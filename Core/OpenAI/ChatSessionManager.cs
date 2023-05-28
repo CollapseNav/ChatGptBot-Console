@@ -1,13 +1,12 @@
 namespace ChatGptBotConsole;
 
-public class ChatSessionManager<T> where T : IChatSessionKey
+public class ChatSessionManager<T> : IChatSessionManager where T : IChatSessionKey
 {
     private readonly IConfig<OpenAIConfig> config;
     private readonly IConfig<OpenAIChatConfig> chatConfig;
     private readonly HttpClient client;
     private readonly ObjContainer container;
     protected Dictionary<T, IOpenAiChatSession> Sessions;
-
     public ChatSessionManager(IConfig<OpenAIConfig> config, IConfig<OpenAIChatConfig> chatConfig, HttpClient client, ObjContainer container)
     {
         Sessions = new();
@@ -16,24 +15,20 @@ public class ChatSessionManager<T> where T : IChatSessionKey
         this.client = client;
         this.container = container;
     }
-
     public bool HasSession(T key)
     {
         return Sessions.ContainsKey(key);
     }
-
-    public IOpenAiChatSession GetSession(T key)
+    public IOpenAiChatSession? GetSession(T key)
     {
         if (!HasSession(key))
             Sessions.Add(key, container.GetObj<BaseChatSession>());
-        // Sessions.Add(key, new BaseChatSession(config.Data, chatConfig.Data, client));
         return Sessions[key];
     }
-
-    public IOpenAiChatSession GetSessionByBotMsg(IBotMsg botMsg)
+    public IOpenAiChatSession? GetSessionByBotMsg(IBotMsg botMsg)
     {
         if (botMsg is IBotMsg<T> chatBotMsg)
-            return GetSession(chatBotMsg.From);
+            return GetSession(chatBotMsg!.From!);
         return null;
     }
 }

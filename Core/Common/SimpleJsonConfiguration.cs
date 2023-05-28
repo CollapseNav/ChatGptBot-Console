@@ -34,22 +34,22 @@ public class SimpleJsonConfiguration
         if (!Path.IsPathRooted(path))
             path = Path.GetFullPath(path);
         JsonNodes.Add(path, path.GetJsonObjectFromPath());
-        if (reloadOnChanage)
-        {
-            var watcher = new FileSystemWatcher(Path.GetDirectoryName(path), "*.json");
-            watcher.Changed += (o, e) =>
-            {
-                JsonNodes.AddOrUpdate(path, path.GetJsonObjectFromPath());
-                Console.WriteLine($"{path} 文件发生更改");
-                PathValue.Clear();
-            };
-            watcher.EnableRaisingEvents = true;
-            Watchers.Add(watcher);
-        }
+        // if (reloadOnChanage)
+        // {
+        //     var watcher = new FileSystemWatcher(Path.GetDirectoryName(path), "*.json");
+        //     watcher.Changed += (o, e) =>
+        //     {
+        //         JsonNodes.AddOrUpdate(path, path.GetJsonObjectFromPath());
+        //         Console.WriteLine($"{path} 文件发生更改");
+        //         PathValue.Clear();
+        //     };
+        //     watcher.EnableRaisingEvents = true;
+        //     Watchers.Add(watcher);
+        // }
         return this;
     }
 
-    public T Get<T>(string nodePath)
+    public T? Get<T>(string nodePath)
     {
         nodePath = nodePath.Replace(':', '.');
         if (PathValue.ContainsKey(nodePath))
@@ -66,12 +66,12 @@ public class SimpleJsonConfiguration
         return default;
     }
 
-    private T Get<T>(JsonNode jsonNode, string path)
+    private T? Get<T>(JsonNode jsonNode, string path)
     {
         if (path.IsEmpty())
             return default;
         var paths = path.Split(',');
-        var data = jsonNode[paths.FirstOrDefault()];
+        var data = jsonNode[paths!.FirstOrDefault()];
         if (data == null)
             return default;
         if (paths.Length == 1)

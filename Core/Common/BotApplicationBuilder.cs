@@ -5,7 +5,7 @@ namespace ChatGptBotConsole;
 public class BotApplicationBuilder
 {
     public List<Action<BotApplication, ObjContainer>> Actions { get; set; }
-    public SimpleJsonConfiguration Configuration { get; set; }
+    public SimpleJsonConfiguration? Configuration { get; set; }
     public ObjContainer Container { get; set; }
     public BotApplicationBuilder()
     {

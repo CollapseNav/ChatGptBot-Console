@@ -9,8 +9,8 @@ public class HttpBotApplication : BotApplication
     {
         while (true)
         {
-            var msg = await pipeline.GetMsgAsync() as HttpMsg;
-            await ExecMiddleware(msg).Invoke();
+            if (await pipeline.GetMsgAsync() is HttpMsg msg)
+                await ExecMiddleware(msg).Invoke();
         }
     }
 }

@@ -11,7 +11,7 @@ public class OpenAIChatRequestModel
     /// <summary>
     /// 模型名称
     /// </summary>
-    public string model { get; set; }
+    public string? model { get; set; }
     /// <summary>
     /// 单次返回的最大token长度
     /// </summary>
@@ -74,5 +74,5 @@ public class OpenAIChatRequestModel
             presence_penalty1 = value;
         }
     }
-    public IEnumerable<OpenAIChatUnit> messages { get; set; }
+    public IEnumerable<OpenAIChatUnit>? messages { get; set; }
 }

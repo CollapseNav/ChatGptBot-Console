@@ -12,7 +12,8 @@ public class HttpEmptyMiddleware : IMiddleware
     {
         var msg = botMsg as HttpMsg;
         Console.WriteLine(msg.ToJson());
-        msg.Response(DateTime.Now.ToDefaultMilliString());
+        if (msg != null)
+            msg.Response(DateTime.Now.ToDefaultMilliString());
         await next();
     }
 }

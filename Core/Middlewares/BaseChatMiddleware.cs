@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Collapsenav.Net.Tool;
 
 namespace ChatGptBotConsole;
@@ -15,7 +16,7 @@ public class BaseChatMiddleware<T> : IMiddleware where T : IChatSessionKey
             await next();
         else
         {
-            string content = await session.AskAsync(botMsg.Msg);
+            string content = await session.AskAsync(botMsg!.Msg!);
             if (content.NotEmpty())
                 botMsg.Response(content);
         }

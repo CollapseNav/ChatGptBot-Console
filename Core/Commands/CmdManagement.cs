@@ -15,7 +15,7 @@ public class CmdManagement
         {
             var prefix = item.GetCustomAttribute<PrefixAttribute>();
             if (prefix == null)
-                return (null, null);
+                return (null, null)!;
             return (item, prefix.Prefix);
         }).Where(item => item.item != null).ToDictionary(item => item.item, item => item.Prefix);
     }
@@ -25,7 +25,7 @@ public class CmdManagement
         return (container.GetObj(type) as ICommand)!;
     }
 
-    public ICommand GetCommand(string prefix)
+    public ICommand? GetCommand(string prefix)
     {
         if (!Cmds.Any(item => item.Value.Contains(prefix)))
             return null;

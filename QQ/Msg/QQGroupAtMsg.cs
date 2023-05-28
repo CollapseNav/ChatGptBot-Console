@@ -1,4 +1,6 @@
 using System.Data;
+using System.Text;
+using Collapsenav.Net.Tool;
 using EleCho.GoCqHttpSdk;
 using EleCho.GoCqHttpSdk.Message;
 using EleCho.GoCqHttpSdk.Post;
@@ -9,7 +11,7 @@ namespace ChatGptBotConsole;
 /// </summary>
 public class QQGroupMsg : QQMsg<CqGroupMessagePostContext>, IBotMsg<QQGroupUser, QQGroupUser>
 {
-    public List<CqAtMsg> AtMsgs { get; protected set; }
+    public List<CqAtMsg>? AtMsgs { get; protected set; }
     /// <summary>
     /// 群号
     /// </summary>
@@ -25,19 +27,19 @@ public class QQGroupMsg : QQMsg<CqGroupMessagePostContext>, IBotMsg<QQGroupUser,
     /// <summary>
     /// 通过context创建消息
     /// </summary>
-    public static QQGroupMsg CreateMsg(CqGroupMessagePostContext context, CqWsSession session)
+    public static QQGroupMsg? CreateMsg(CqGroupMessagePostContext context, CqWsSession session)
     {
         return InitMsg(new QQGroupMsg(session), context);
     }
     /// <summary>
     /// 通过context初始化群at消息
     /// </summary>
-    public static QQGroupMsg InitMsg(QQGroupMsg botMsg, CqGroupMessagePostContext context)
+    public static QQGroupMsg? InitMsg(QQGroupMsg botMsg, CqGroupMessagePostContext context)
     {
         if (botMsg == null || context == null)
             throw new NoNullAllowedException();
         botMsg.InitByMsgContext(context);
-        if (botMsg.To.Any(item => item.UserId == context.SelfId))
+        if (botMsg!.To!.Any(item => item.UserId == context.SelfId))
             return botMsg;
         return null;
     }
@@ -54,11 +56,43 @@ public class QQGroupMsg : QQMsg<CqGroupMessagePostContext>, IBotMsg<QQGroupUser,
     public void InitByMsgContext(CqGroupMessagePostContext context)
     {
         var msg = context.Message;
-        Msg = context.Message.Text;
+        StringBuilder sb = new();
+        foreach (var m in msg)
+        {
+            if (m is CqTextMsg mt)
+            {
+                sb.Append(mt.Text);
+                continue;
+            }
+            if (m is CqAtMsg mat && mat.Target != context.SelfId)
+            {
+                sb.Append($" {mat.Target}");
+                continue;
+            }
+        }
+        Msg = sb.ToString();
         GroupId = context.GroupId;
-        From = new QQGroupUser(context.UserId, context?.Sender?.Nickname, context.GroupId); ;
+        From = new QQGroupUser(context.UserId, context?.Sender?.Nickname, context!.GroupId); ;
         var atmsg = msg.Where(item => item is CqAtMsg).ToList();
         AtMsgs = atmsg.Select(item => (item as CqAtMsg)!).ToList();
         To = AtMsgs.Select(item => new QQGroupUser(item.Target, item.Name, context.GroupId)).ToArray();
+    }
+
+    public override void Response(MultiResponseData data)
+    {
+        var msg = new CqMessage { };
+        if (data.Msg.NotEmpty())
+            msg.Add(new CqTextMsg(data!.Msg!));
+        if (data.Images.NotEmpty())
+        {
+            foreach (var image in data!.Images!)
+            {
+                var guid = Guid.NewGuid().ToString();
+                var filename = $"{guid}.png";
+                image.SaveTo($"G:\\go-cqhttp_windows_amd64\\data\\images\\{filename}");
+                msg.Add(new CqImageMsg(filename));
+            }
+        }
+        session.SendGroupMessage(GroupId!.Value, msg);
     }
 }

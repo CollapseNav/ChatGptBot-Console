@@ -8,14 +8,20 @@ builder
 .AddJsonConfig<OpenAIConfig>("OpenAIConfig")
 .AddJsonConfig<AiContent>("Content")
 .AddJsonConfig<NlpConfig>("NlpConfig")
+.AddJsonConfig<AccountListData>("AccountConfig")
+.AddJsonConfig<SdConfig>("SdConfig")
 .AddQQBot("ws://localhost:8080")
 .AddType<ChatSessionManager<QQGroupUser>>()
 .AddType<ChatSessionManager<QQSimpleUser>>()
 .AddType<BaseChatSession>()
 .Add(new HttpClient())
+.AddCommand()
+.Add(new AccountListData())
 ;
+JsonExt.DefaultJsonSerializerOption.WriteIndented = true;
 var app = builder.Build();
 app.Use<DefaultErrorHandleMiddleware>();
+app.Use<WhiteListFilterMiddleware>();
 app.Use<NlpClassificationMiddleware>();
 app.Use<BaseChatMiddleware<QQSimpleUser>>();
 app.Use<BaseChatMiddleware<QQGroupUser>>();

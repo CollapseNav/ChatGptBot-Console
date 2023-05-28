@@ -1,17 +1,9 @@
 {
     "NlpConfig": {
-        "Url": "http://localhost:8000",
-        "DefaultLables": [
-            "draw",
-            "chat",
-            "addwhitelist",
-            "removewhitelist",
-            "addblacklist",
-            "removeblacklist",
-            "showblacklist",
-            "unknow",
-            "other"
-        ]
+        "Url": "http://localhost:8000"
+    },
+    "SdConfig": {
+        "Url": "http://127.0.0.1:7860"
     },
     "ChatConfig": {
         "LimitTime": 300,
@@ -22,8 +14,8 @@
     "OpenAIConfig": {
     },
     "AccountConfig": {
-        "AllowList": [],
-        "BlockList": [],
+        "WhiteList": [],
+        "BlackList": [],
         "AdminList": []
     },
     "Content": {
