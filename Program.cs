@@ -10,6 +10,7 @@ builder
 .AddJsonConfig<NlpConfig>("NlpConfig")
 .AddJsonConfig<AccountListData>("AccountConfig")
 .AddJsonConfig<SdConfig>("SdConfig")
+.AddJsonConfig<List<NLPLoraNode>>("Lora")
 .AddQQBot("ws://localhost:8080")
 .AddType<ChatSessionManager<QQGroupUser>>()
 .AddType<ChatSessionManager<QQSimpleUser>>()

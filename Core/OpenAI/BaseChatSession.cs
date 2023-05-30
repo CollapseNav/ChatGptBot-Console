@@ -43,6 +43,9 @@ public class BaseChatSession : IOpenAiChatSession
                 max_tokens = config.MaxLen,
                 messages = history,
                 temperature = config.Temperature,
+                top_p = config.Top_P,
+                frequency_penalty = config.Frequency_penalty,
+                presence_penalty = config.Presence_penalty,
             })
         };
         var response = await client.SendAsync(request);

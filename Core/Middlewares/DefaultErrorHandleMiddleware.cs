@@ -14,7 +14,7 @@ public class DefaultErrorHandleMiddleware : IMiddleware
         catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
-            botMsg?.Response(ex.Message);
+            botMsg?.Response("未知错误");
         }
     }
 }

@@ -45,7 +45,7 @@ public class OpenAIChatRequestModel
     {
         get => top_p1; set
         {
-            if (value <= 0 || value > 1)
+            if (value < 0 || value > 1)
                 throw new Exception("top_p 的值只能在0~1之间");
             top_p1 = value;
         }
@@ -57,7 +57,7 @@ public class OpenAIChatRequestModel
     {
         get => frequency_penalty1; set
         {
-            if (value <= 0 || value > 2)
+            if (value < 0 || value > 1)
                 throw new Exception("frequency_penalty 的值只能在0~1之间");
             frequency_penalty1 = value;
         }
@@ -69,7 +69,7 @@ public class OpenAIChatRequestModel
     {
         get => presence_penalty1; set
         {
-            if (value <= 0 || value > 2)
+            if (value < 0 || value > 1)
                 throw new Exception("presence_penalty 的值只能在0~1之间");
             presence_penalty1 = value;
         }
