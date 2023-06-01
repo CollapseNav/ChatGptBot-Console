@@ -50,6 +50,7 @@ public class QQPrivateMsg : QQMsg<CqPrivateMessagePostContext>, IBotMsg<QQSimple
 
     public void InitByMsgContext([NotNull] CqPrivateMessagePostContext context)
     {
+        base.InitByMsgContext(context);
         var msg = context.Message;
         Msg = context.Message.Text;
         From = new QQSimpleUser(context.UserId, context?.Sender?.Nickname); ;

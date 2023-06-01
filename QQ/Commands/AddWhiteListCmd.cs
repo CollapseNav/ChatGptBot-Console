@@ -15,6 +15,11 @@ public class AddWhiteListCmd : ClassificationCmd
     {
         if (botMsg is not QQGroupMsg qqmsg)
             return true;
+        if (!accountList.Data.AdminList.Contains(qqmsg.From.UserId.Value))
+        {
+            qqmsg.Response("你不是管理员,无法操作白名单");
+            return true;
+        }
         if (qqmsg.AtMsgs.Count <= 1)
             return true;
         accountList.Data.AddToWhiteList(qqmsg.AtMsgs.Select(item => item.Target).ToArray());

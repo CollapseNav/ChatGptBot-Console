@@ -27,12 +27,16 @@ public class DrawCmd : ClassificationCmd
 
     private string[] SampleNames = new[] {
         "Euler a",
+        "Euler a",
+        "Euler a",
+        "Euler",
+        "Euler",
         "Euler",
         "Heun",
         // "DPM2",
-        "DPM++ 2S a",
-        "DPM++ 2M",
-        "DPM++ SDE",
+        // "DPM++ 2S a",
+        // "DPM++ 2M",
+        // "DPM++ SDE",
         "DPM adaptive",
         "DPM2 Karras",
         "DPM++ 2S a Karras",
@@ -112,7 +116,7 @@ public class DrawCmd : ClassificationCmd
         var promptTask = session.AskAsync(quesiton);
 
         // 获取大致的lora分类
-        var labels = LoraNodes.Select(item => item.Label!).ToList();
+        var labels = LoraNodes.Where(item => item.Enable).SelectMany(item => item.Labels!).Unique().ToList();
         labels.AddRange("other", "not sure", "unknow");
         var paramTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(item => item.GetTypes()).Where(item => item.IsType<SdParam>() && !item.IsAbstract).ToArray();
         var paramLabels = paramTypes.SelectMany(item => item.GetCustomAttribute<PrefixAttribute>().Prefix).Unique().ToArray();
@@ -152,7 +156,7 @@ public class DrawCmd : ClassificationCmd
         {
             result = (await res.Content.ReadFromJsonAsync<Dictionary<string, decimal>>())!;
             Console.WriteLine(result.ToJson());
-            var matchLoras = LoraNodes.Where(item => result.First(r => r.Key == item.Label).Value > item.MatchWeight).ToArray();
+            var matchLoras = LoraNodes.Where(item => result.First(r => item.Labels.Contains(r.Key)).Value > item.MatchWeight).ToArray();
             matchLoras = matchLoras.GroupBy(item => item.Lora).Select(item => item.First()).ToArray();
             foreach (var lora in matchLoras)
             {
@@ -187,7 +191,8 @@ public class DrawCmd : ClassificationCmd
         var stream = bytes.ToStream();
         botMsg.Response(new MultiResponseData
         {
-            Images = new[] { stream }
+            Images = new[] { stream },
+            IsAt = false,
         });
         return true;
     }

@@ -18,9 +18,12 @@ public class QQGroupMsg : QQMsg<CqGroupMessagePostContext>, IBotMsg<QQGroupUser,
     public long? GroupId { get; set; }
     public QQGroupUser[]? To { get; protected set; }
     public QQGroupUser? From { get; protected set; }
+    public IConfig<AccountListData> AccountList { get; }
+
     public QQGroupMsg(CqWsSession session) : base(session) { }
-    public QQGroupMsg(CqGroupMessagePostContext context, CqWsSession session) : base(context, session)
+    public QQGroupMsg(CqGroupMessagePostContext context, CqWsSession session, HttpClient client, IConfig<NlpConfig> nlpconfig, IConfig<AccountListData> accountList) : base(context, session, client, nlpconfig)
     {
+        AccountList = accountList;
         InitMsg(this, context);
     }
 
@@ -39,7 +42,7 @@ public class QQGroupMsg : QQMsg<CqGroupMessagePostContext>, IBotMsg<QQGroupUser,
         if (botMsg == null || context == null)
             throw new NoNullAllowedException();
         botMsg.InitByMsgContext(context);
-        if (botMsg!.To!.Any(item => item.UserId == context.SelfId))
+        if ((botMsg.Audio != null && botMsg.AccountList.Data.AdminList.Contains(botMsg.From.UserId.Value)) || botMsg!.To!.Any(item => item.UserId == context.SelfId))
             return botMsg;
         return null;
     }
@@ -48,13 +51,16 @@ public class QQGroupMsg : QQMsg<CqGroupMessagePostContext>, IBotMsg<QQGroupUser,
     {
         if (!GroupId.HasValue)
             throw new Exception();
-        session.SendGroupMessageAsync(GroupId.Value, new CqMessage{
-            new CqTextMsg(data)
-        }).Wait();
+        var msg = new CqMessage { };
+        if (From != null && From.UserId.HasValue)
+            msg.Add(new CqAtMsg(From.UserId.Value));
+        msg.Add(new CqTextMsg(data));
+        session.SendGroupMessageAsync(GroupId.Value, msg).Wait();
     }
 
     public void InitByMsgContext(CqGroupMessagePostContext context)
     {
+        base.InitByMsgContext(context);
         var msg = context.Message;
         StringBuilder sb = new();
         foreach (var m in msg)
@@ -70,7 +76,7 @@ public class QQGroupMsg : QQMsg<CqGroupMessagePostContext>, IBotMsg<QQGroupUser,
                 continue;
             }
         }
-        Msg = sb.ToString();
+        Msg += sb.ToString();
         GroupId = context.GroupId;
         From = new QQGroupUser(context.UserId, context?.Sender?.Nickname, context!.GroupId); ;
         var atmsg = msg.Where(item => item is CqAtMsg).ToList();
@@ -81,6 +87,8 @@ public class QQGroupMsg : QQMsg<CqGroupMessagePostContext>, IBotMsg<QQGroupUser,
     public override void Response(MultiResponseData data)
     {
         var msg = new CqMessage { };
+        if (data.IsAt && From != null && From.UserId.HasValue)
+            msg.Add(new CqAtMsg(From.UserId.Value));
         if (data.Msg.NotEmpty())
             msg.Add(new CqTextMsg(data!.Msg!));
         if (data.Images.NotEmpty())

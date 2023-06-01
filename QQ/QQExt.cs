@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Transactions;
 using EleCho.GoCqHttpSdk;
 
 namespace ChatGptBotConsole;
@@ -38,7 +39,9 @@ public static class QQExt
             session.UseGroupMessage(async context =>
             {
                 // 尝试创建群at消息，暂时只接受群消息
-                var msg = QQGroupMsg.CreateMsg(context, session);
+
+                // var msg = QQGroupMsg.CreateMsg(context, session);
+                var msg = new QQGroupMsg(context, session, container.GetObj<HttpClient>(), container.GetObj<IConfig<NlpConfig>>(), container.GetObj<IConfig<AccountListData>>());
                 if (msg != null)
                     application.AddMsg(msg);
             });

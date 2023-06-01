@@ -6,11 +6,11 @@ public class NLPLoraNode : NLPNode
     {
     }
 
-    public NLPLoraNode(string label, decimal matchWeight, bool enable = true) : base(label, matchWeight, enable)
+    public NLPLoraNode(string[] label, decimal matchWeight, bool enable = true) : base(label, matchWeight, enable)
     {
     }
 
-    public NLPLoraNode(string label, decimal matchWeight, string? lora, decimal? loraWeight, LoraType type, string[]? triggerWords = null, LoraAddPosition position = LoraAddPosition.E, bool enable = true) : base(label, matchWeight, enable)
+    public NLPLoraNode(string[] label, decimal matchWeight, string? lora, decimal? loraWeight, LoraType type, string[]? triggerWords = null, LoraAddPosition position = LoraAddPosition.E, bool enable = true) : base(label, matchWeight, enable)
     {
         Lora = lora;
         LoraWeight = loraWeight;
