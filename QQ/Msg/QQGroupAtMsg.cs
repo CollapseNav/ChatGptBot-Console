@@ -44,6 +44,7 @@ public class QQGroupMsg : QQMsg<CqGroupMessagePostContext>, IBotMsg<QQGroupUser,
         botMsg.InitByMsgContext(context);
         if ((botMsg.Audio != null && botMsg.AccountList.Data.AdminList.Contains(botMsg.From.UserId.Value)) || botMsg!.To!.Any(item => item.UserId == context.SelfId))
             return botMsg;
+        botMsg.Msg = null;
         return null;
     }
 

@@ -42,7 +42,7 @@ public static class QQExt
 
                 // var msg = QQGroupMsg.CreateMsg(context, session);
                 var msg = new QQGroupMsg(context, session, container.GetObj<HttpClient>(), container.GetObj<IConfig<NlpConfig>>(), container.GetObj<IConfig<AccountListData>>());
-                if (msg != null)
+                if (msg != null && msg.Msg != null)
                     application.AddMsg(msg);
             });
             session.UsePrivateMessage(async context =>
