@@ -2,6 +2,7 @@ using System.Net.Http.Json;
 namespace ChatGptBotConsole;
 public class NewBingComposeBuilder
 {
+    private HttpClient client;
     public IEnumerable<string> DefaultOptions = new[] {
         "nlu_direct_response_filter",
         "deepleo",
@@ -25,6 +26,12 @@ public class NewBingComposeBuilder
         "GenerateContentQuery",
         "SearchQuery"
     };
+
+    public NewBingComposeBuilder(HttpClient client)
+    {
+        this.client = client;
+    }
+
     public async Task<NewBingCompose> Build()
     {
         var model = new NewBingCompose();
@@ -36,8 +43,7 @@ public class NewBingComposeBuilder
         arg.OptionSets = DefaultOptions.ToList();
         arg.AllowedMessageTypes = DefaultAllowMessagbeTypes.ToList();
         arg.SliceIds = Enumerable.Empty<string>();
-        HttpClient client = new HttpClient();
-        var sec = await client.GetFromJsonAsync<NewBingComposeSec>("https://mulit.collapsenav.com/turing/conversation/create");
+        var sec = await GetNewBingComposeSec();
         arg.ConversationId = sec?.ConversationId;
         arg.ConversationSignature = sec?.ConversationSignature;
         arg.Participant = new() { Id = sec?.ClientId };
@@ -52,5 +58,13 @@ public class NewBingComposeBuilder
     {
         var msg = new NewBingComposeArgumentMessage();
         return msg;
+    }
+
+    public async Task<NewBingComposeSec> GetNewBingComposeSec()
+    {
+        client ??= new HttpClient();
+        var sec = await client.GetFromJsonAsync<NewBingComposeSec>("https://mulit.collapsenav.com/turing/conversation/create");
+        client.Dispose();
+        return sec;
     }
 }

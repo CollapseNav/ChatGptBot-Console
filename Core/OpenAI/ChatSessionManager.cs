@@ -19,13 +19,13 @@ public class ChatSessionManager<T> : IChatSessionManager where T : IChatSessionK
     {
         return Sessions.ContainsKey(key);
     }
-    public IOpenAiChatSession? GetSession(T key)
+    public IChatSession? GetSession(T key)
     {
         if (!HasSession(key))
             Sessions.Add(key, container.GetObj<BaseChatSession>());
         return Sessions[key];
     }
-    public IOpenAiChatSession? GetSessionByBotMsg(IBotMsg botMsg)
+    public IChatSession? GetSessionByBotMsg(IBotMsg botMsg)
     {
         if (botMsg is IBotMsg<T> chatBotMsg)
             return GetSession(chatBotMsg!.From!);
