@@ -15,10 +15,7 @@
         "ApiKey": "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"
     },
     "AccountConfig": {
-        "WhiteList": [
-            1374867857,
-            981774831
-        ],
+        "WhiteList": [],
         "BlackList": [],
         "AdminList": []
     },

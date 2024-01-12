@@ -23,7 +23,7 @@ JsonExt.DefaultJsonSerializerOption.WriteIndented = true;
 var app = builder.Build();
 app.Use<DefaultErrorHandleMiddleware>();
 app.Use<WhiteListFilterMiddleware>();
-// app.Use<BlackListFilterMiddleware>();
+app.Use<BlackListFilterMiddleware>();
 app.Use<NlpClassificationMiddleware>();
 app.Use<BaseChatMiddleware<QQSimpleUser>>();
 app.Use<BaseChatMiddleware<QQGroupUser>>();
